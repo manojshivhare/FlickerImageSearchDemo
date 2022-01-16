@@ -15,11 +15,11 @@ class ImageCollectionViewCellVM{
     var farm: Int
 
     init(model: PhotoModel) {
-        self.photoId = model.id ?? ""
-        self.owner = model.owner ?? ""
-        self.secret = model.secret ?? ""
-        self.server = model.server ?? ""
-        self.farm = model.farm ?? 0
+        self.photoId = model.id
+        self.owner = model.owner
+        self.secret = model.secret
+        self.server = model.server
+        self.farm = model.farm
     }
     
 //    func callAPIAndGetImageFromUrl(completionBlock: @escaping (UIImage) -> ()) -> UIImage{

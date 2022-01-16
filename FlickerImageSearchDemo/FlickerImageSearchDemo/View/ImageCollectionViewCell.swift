@@ -12,15 +12,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var flickerImgView: UIImageView!
     var cellViewModel: ImageCollectionViewCellVM?{
         didSet{
-            guard let farm = cellViewModel?.farm, let server = cellViewModel?.server, let photoId = cellViewModel?.photoId, let secret = cellViewModel?.secret else {
-                return
-            }
-            ApiManager.shared.getImageFromImageURL(farm: farm, server: server, phototId: photoId, secret: secret) { resImage in
-                let image = resImage
-                DispatchQueue.main.async {
-                    self.flickerImgView.image = image
-                }
-            }
+            setUpImage()
         }
     }
     override func awakeFromNib() {
@@ -32,9 +24,8 @@ class ImageCollectionViewCell: UICollectionViewCell {
             return
         }
         ApiManager.shared.getImageFromImageURL(farm: farm, server: server, phototId: photoId, secret: secret) { resImage in
-            let image = resImage
             DispatchQueue.main.async {
-                self.flickerImgView.image = image
+                self.flickerImgView.image = resImage
             }
         }
     }

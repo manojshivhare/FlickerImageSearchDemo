@@ -42,7 +42,7 @@ class ApiManager{
     //MARK: Download image from URL
     func getImageFromImageURL(farm: Int, server: String, phototId: String, secret: String, completionBlock: @escaping (UIImage) -> ()) {
         let urlStr = "https://farm\(farm).static.flickr.com/\(server)/\(phototId)_\(secret).jpg"
-        debugPrint("imageUrl =\(urlStr)")
+        //debugPrint("imageUrl =\(urlStr)")
         guard let url = URL(string: urlStr) else {return}
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,

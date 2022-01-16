@@ -15,19 +15,22 @@ class FlickerImgesVC: UIViewController {
     private var photoArr: [PhotoModel]?
     override func viewDidLoad() {
         super.viewDidLoad()
-        callAPIToGetData()
+        //callAPIToGetData()
         setupCollectionView()
+        imageSearchBar.delegate = self
     }
     
     private func setupCollectionView(){
-        imageCollectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: "ImageCollectionViewCell")
+       // imageCollectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: "ImageCollectionViewCell")
+        imageCollectionView.register(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
+
         imageCollectionView.dataSource = self
         imageCollectionView.delegate = self
     }
-    private func callAPIToGetData(){
+    private func callAPIToGetData(searchText: String){
         viewModel = FlickerImageVM()
         viewModel?.delegate = self
-        viewModel?.callApiManagerAndGetData(viewController: self,searchStr: "cat")
+        viewModel?.callApiManagerAndGetData(viewController: self,searchStr: searchText)
     }
     private func reloadCollectionView(){
         DispatchQueue.main.async {
@@ -41,19 +44,43 @@ extension FlickerImgesVC: UICollectionViewDelegate,UICollectionViewDataSource,UI
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectionViewCell", for: indexPath as IndexPath) as! ImageCollectionViewCell
+        let cell: ImageCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectionViewCell", for: indexPath) as! ImageCollectionViewCell
         if let photoModel = photoArr?[indexPath.item] {
             cell.cellViewModel = ImageCollectionViewCellVM(model: photoModel)
         }
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
-        return indexPath.item == 0 ? CGSize(width: 0, height: 0) : CGSize(width: collectionView.bounds.size.width/2.1, height: collectionView.bounds.size.width/2.1)
+        let yourWidth = (collectionView.bounds.width/3.0) - 5
+           let yourHeight = yourWidth
+
+           return CGSize(width: yourWidth, height: yourHeight)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets.zero
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 5
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 5
     }
 }
 extension FlickerImgesVC: FlickerImageVMProtocol{
     func notifyAfterGettingData(responseArr: [PhotoModel]?) {
         photoArr = responseArr
         reloadCollectionView()
+    }
+}
+extension FlickerImgesVC: UISearchBarDelegate{
+    //MARK: Call ImageSearch API
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        if searchBar.text?.count == 0 {
+            return
+        }
+        callAPIToGetData(searchText: searchBar.text!)
     }
 }
