@@ -8,10 +8,34 @@
 import UIKit
 
 class ImageCollectionViewCell: UICollectionViewCell {
-
+    
+    @IBOutlet weak var flickerImgView: UIImageView!
+    var cellViewModel: ImageCollectionViewCellVM?{
+        didSet{
+            guard let farm = cellViewModel?.farm, let server = cellViewModel?.server, let photoId = cellViewModel?.photoId, let secret = cellViewModel?.secret else {
+                return
+            }
+            ApiManager.shared.getImageFromImageURL(farm: farm, server: server, phototId: photoId, secret: secret) { resImage in
+                let image = resImage
+                DispatchQueue.main.async {
+                    self.flickerImgView.image = image
+                }
+            }
+        }
+    }
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-
+    private func setUpImage(){
+        guard let farm = cellViewModel?.farm, let server = cellViewModel?.server, let photoId = cellViewModel?.photoId, let secret = cellViewModel?.secret else {
+            return
+        }
+        ApiManager.shared.getImageFromImageURL(farm: farm, server: server, phototId: photoId, secret: secret) { resImage in
+            let image = resImage
+            DispatchQueue.main.async {
+                self.flickerImgView.image = image
+            }
+        }
+    }
 }
