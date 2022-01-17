@@ -78,9 +78,11 @@ extension FlickerImgesVC: UISearchBarDelegate{
     //MARK: Call ImageSearch API
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
-        if searchBar.text?.count == 0 {
-            return
+        if (searchBar.text?.count ?? 0) > 0 {
+            if var keyword = searchBar.text{
+                keyword = keyword.replacingOccurrences(of: " ", with: "")
+                callAPIToGetData(searchText: keyword)
+            }
         }
-        callAPIToGetData(searchText: searchBar.text!)
     }
 }

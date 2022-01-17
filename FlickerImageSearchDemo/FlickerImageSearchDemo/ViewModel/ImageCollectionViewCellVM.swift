@@ -7,27 +7,21 @@
 
 import Foundation
 import UIKit
-class ImageCollectionViewCellVM{
-    var photoId: String
-    var owner: String
-    var secret: String
-    var server: String
-    var farm: Int
+protocol ImageCollectionViewCellVMProtocol {
+    func getImageFromAPIResponse(resImg: UIImage)
+}
 
+class ImageCollectionViewCellVM{
+
+    var delegate: ImageCollectionViewCellVMProtocol?
+    
     init(model: PhotoModel) {
-        self.photoId = model.id
-        self.owner = model.owner
-        self.secret = model.secret
-        self.server = model.server
-        self.farm = model.farm
+        callAPIAndGetImageFromUrl(farm: model.farm, server: model.server, photoId: model.id, secret: model.secret)
     }
     
-//    func callAPIAndGetImageFromUrl(completionBlock: @escaping (UIImage) -> ()) -> UIImage{
-//        var image = UIImage()
-//        ApiManager.shared.getImageFromImageURL(farm: self.farm, server: self.server, phototId: self.photoId, secret: self.secret) { resImage in
-//            image = resImage
-//        }
-//        
-//        return image
-//    }
+    private func callAPIAndGetImageFromUrl(farm: Int, server: String, photoId: String, secret: String){
+        ApiManager.shared.getImageFromImageURL(farm: farm, server: server, phototId: photoId, secret: secret) { [weak self] resImage in
+            self?.delegate?.getImageFromAPIResponse(resImg: resImage)
+        }
+    }
 }

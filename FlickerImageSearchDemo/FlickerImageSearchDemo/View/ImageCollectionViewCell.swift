@@ -10,6 +10,7 @@ import UIKit
 class ImageCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var flickerImgView: UIImageView!
+    
     var cellViewModel: ImageCollectionViewCellVM?{
         didSet{
             setUpImage()
@@ -20,13 +21,14 @@ class ImageCollectionViewCell: UICollectionViewCell {
         // Initialization code
     }
     private func setUpImage(){
-        guard let farm = cellViewModel?.farm, let server = cellViewModel?.server, let photoId = cellViewModel?.photoId, let secret = cellViewModel?.secret else {
-            return
-        }
-        ApiManager.shared.getImageFromImageURL(farm: farm, server: server, phototId: photoId, secret: secret) { resImage in
-            DispatchQueue.main.async {
-                self.flickerImgView.image = resImage
-            }
+        cellViewModel?.delegate = self
+    }
+}
+extension ImageCollectionViewCell: ImageCollectionViewCellVMProtocol{
+    func getImageFromAPIResponse(resImg: UIImage) {
+        DispatchQueue.main.async {
+            self.flickerImgView.image = resImg
         }
     }
+    
 }
