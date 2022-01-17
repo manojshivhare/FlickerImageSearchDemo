@@ -38,7 +38,7 @@ class FlickerImgesVC: UIViewController {
         }
     }
 }
-extension FlickerImgesVC: UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
+extension FlickerImgesVC:UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photoArr?.count ?? 0
     }
@@ -52,9 +52,7 @@ extension FlickerImgesVC: UICollectionViewDelegate,UICollectionViewDataSource,UI
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         let yourWidth = (collectionView.bounds.width/3.0) - 5
-           let yourHeight = yourWidth
-
-           return CGSize(width: yourWidth, height: yourHeight)
+        return CGSize(width: yourWidth, height: yourWidth)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets.zero
@@ -67,6 +65,8 @@ extension FlickerImgesVC: UICollectionViewDelegate,UICollectionViewDataSource,UI
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 5
     }
+    
+    
 }
 extension FlickerImgesVC: FlickerImageVMProtocol{
     func notifyAfterGettingData(responseArr: [PhotoModel]?) {
