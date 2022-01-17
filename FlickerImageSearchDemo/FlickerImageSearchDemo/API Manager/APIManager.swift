@@ -8,17 +8,20 @@
 import Foundation
 import UIKit
 
+//MARK: ----------Struct For API Url----------
 struct FlickerImageUrl {
     static let searchURl = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2932ade8b209152a7cbb49b631c4f9b6&%20format=json&nojsoncallback=1&safe_search=1&text="
 }
-
+//MARK: ----------API manage class----------
 class ApiManager{
-    
+    //MARK: ----------Singleton Object---------
     static let shared = ApiManager()
+    //MARK: ----------variable----------------
     let session = URLSession(configuration: .default)
     var request : NSMutableURLRequest = NSMutableURLRequest()
     var activityIndicator : UIActivityIndicatorView?
     
+    //MARK: ----------Image Search API----------------
     func getImageArrFromAPI(searchKey:String,view:UIView,_ complition: @escaping ([PhotoModel]?)->()) {
         let urlStr = FlickerImageUrl.searchURl + "\(searchKey)"
         guard let url = URL(string: urlStr) else {return}
@@ -39,7 +42,7 @@ class ApiManager{
         task.resume()
     }
     
-    //MARK: Download image from URL
+    //MARK: ---------Download image from URL-------------
     func getImageFromImageURL(farm: Int, server: String, phototId: String, secret: String, completionBlock: @escaping (UIImage) -> ()) {
         let urlStr = "https://farm\(farm).static.flickr.com/\(server)/\(phototId)_\(secret).jpg"
         //debugPrint("imageUrl =\(urlStr)")
@@ -53,7 +56,7 @@ class ApiManager{
         }.resume()
     }
     
-    //MARK: Show Progress View
+    //MARK: ----------Show Progress View---------------
     func showProgressView(in view:UIView) {
         activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator?.frame = view.bounds
@@ -63,7 +66,7 @@ class ApiManager{
         activityIndicator?.startAnimating()
     }
     
-    //MARK: Hide Progress View
+    //MARK: ------------Hide Progress View-----------------
     func hideProgressView() {
         DispatchQueue.main.async {
             self.activityIndicator?.stopAnimating()

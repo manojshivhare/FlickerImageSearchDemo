@@ -7,11 +7,10 @@
 
 import Foundation
 import UIKit
-protocol FlickerImageVMProtocol{
-    func notifyAfterGettingData(responseArr: [PhotoModel]?)
-}
 struct FlickerImageVM {
+    //MARK: ----------Varibale----------
     var delegate: FlickerImageVMProtocol?
+    //MARK: ----------Method----------
     func callApiManagerAndGetData(viewController: UIViewController,searchStr: String){
         ApiManager.shared.getImageArrFromAPI(searchKey: searchStr, view: viewController.view) { responseArr in
             self.delegate?.notifyAfterGettingData(responseArr: responseArr)

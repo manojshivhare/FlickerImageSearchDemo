@@ -8,20 +8,20 @@
 import UIKit
 
 class FlickerImgesVC: UIViewController {
-    
+    //MARK: ----------IBoutlet----------
     @IBOutlet weak var imageSearchBar: UISearchBar!
     @IBOutlet weak var imageCollectionView: UICollectionView!
+    //MARK: ----------Variable----------
     private var viewModel: FlickerImageVM?
     private var photoArr: [PhotoModel]?
+    //MARK: ----------Life Cycle----------
     override func viewDidLoad() {
         super.viewDidLoad()
-        //callAPIToGetData()
         setupCollectionView()
         imageSearchBar.delegate = self
     }
-    
+    //MARK: ----------Private method----------
     private func setupCollectionView(){
-       // imageCollectionView.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: "ImageCollectionViewCell")
         imageCollectionView.register(UINib(nibName: "ImageCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ImageCollectionViewCell")
 
         imageCollectionView.dataSource = self
@@ -38,6 +38,7 @@ class FlickerImgesVC: UIViewController {
         }
     }
 }
+//MARK: ----------Extension UICollectionViewProtocol----------
 extension FlickerImgesVC:UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photoArr?.count ?? 0
@@ -65,15 +66,15 @@ extension FlickerImgesVC:UICollectionViewDataSource,UICollectionViewDelegateFlow
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 5
     }
-    
-    
 }
+//MARK: ----------Extension FlickerImageVMProtocol----------
 extension FlickerImgesVC: FlickerImageVMProtocol{
     func notifyAfterGettingData(responseArr: [PhotoModel]?) {
         photoArr = responseArr
         reloadCollectionView()
     }
 }
+//MARK: ----------Extension UISearchBarDelegate----------
 extension FlickerImgesVC: UISearchBarDelegate{
     //MARK: Call ImageSearch API
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

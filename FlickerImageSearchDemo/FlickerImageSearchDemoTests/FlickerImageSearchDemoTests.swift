@@ -9,25 +9,37 @@ import XCTest
 @testable import FlickerImageSearchDemo
 
 class FlickerImageSearchDemoTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    func testImageSearchAPIUrl(){
+        let imageSearchURl = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2932ade8b209152a7cbb49b631c4f9b6&%20format=json&nojsoncallback=1&safe_search=1&text="
+        XCTAssertEqual(imageSearchURl, FlickerImageUrl.searchURl)
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    func testAPIResponseNotNil(){
+        let expactation = self.expectation(description: "APImanagerWillBeCheckedNotNil")
+        ApiManager.shared.getImageArrFromAPI(searchKey: "kitten", view: UIView()) { photoArr in
+            XCTAssertNotNil(photoArr)
+            expactation.fulfill()
         }
+        waitForExpectations(timeout: 5, handler: nil)
     }
-
+    
+    func testSearchAPIResponseNil(){
+        let expactation = self.expectation(description: "APImanagerWillBeCheckedNil")
+        ApiManager.shared.getImageArrFromAPI(searchKey: "", view: UIView()) { photoArr in
+            XCTAssertNil(photoArr)
+            expactation.fulfill()
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+    }
+    
+    func testCollectionViewModelNotnil(){
+        let photoModel = PhotoModel(id: "0", owner: "1", secret: "2", server: "3", farm: 0, title: "title", ispublic: 1, isfriend: 1, isfamily: 1)
+        let photoVModel = ImageCollectionViewCellVM(model: photoModel)
+        XCTAssertEqual(photoModel.farm, photoVModel.farm)
+        XCTAssertEqual(photoModel.secret, photoVModel.secret)
+        XCTAssertEqual(photoModel.server, photoVModel.server)
+        XCTAssertEqual(photoModel.id, photoVModel.id)
+    }
+    
 }
